@@ -1,20 +1,21 @@
 # 🌑 DarkGPT - Telegram Bot
 
-A powerful Telegram bot powered by Claude Opus 4 AI with advanced conversation memory and multi-language support.
+A powerful Telegram bot powered by **Google Gemini AI** with advanced conversation memory and multi-language support.
 
 ## ✨ Features
 
-- 🤖 **Claude Opus 4 AI** - Latest and most advanced AI model
+- 🤖 **Google Gemini AI** - Powerful & FREE AI model
 - 💾 **Conversation Memory** - Remembers previous messages in chat
 - 🌍 **Multi-Language** - Supports Hindi, English, Hinglish
 - ⚡ **Real-time Responses** - Fast and intelligent replies
 - 🎯 **Context-Aware** - Understands conversation flow
+- 💰 **100% FREE API** - No premium subscription needed!
 
 ## 📋 Requirements
 
 - Python 3.8+
-- Telegram Bot Token
-- Anthropic API Key
+- Telegram Bot Token (FREE)
+- Google Gemini API Key (FREE)
 
 ## 🚀 Quick Setup
 
@@ -33,12 +34,12 @@ pip install -r requirements.txt
 Create `.env` file:
 ```env
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-ANTHROPIC_API_KEY=your_anthropic_api_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-**Get Your Keys:**
+**Get Your Keys (Both FREE):**
 - **Telegram Token**: Message [@BotFather](https://t.me/BotFather) → `/newbot`
-- **Anthropic Key**: [console.anthropic.com](https://console.anthropic.com)
+- **Gemini Key**: [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 
 ### 4. Run Bot
 ```bash
@@ -53,7 +54,7 @@ python bot.py
 4. Connect your GitHub repository
 5. Add Environment Variables:
    - `TELEGRAM_BOT_TOKEN`
-   - `ANTHROPIC_API_KEY`
+   - `GEMINI_API_KEY`
 6. Deploy!
 
 ## 🎮 Bot Commands
@@ -64,20 +65,28 @@ python bot.py
 
 ## 💡 Usage
 
-Simply send any message to the bot and it will respond intelligently using Claude Opus 4 AI. The bot maintains conversation context across messages.
+Simply send any message to the bot and it will respond intelligently using Google Gemini AI. The bot maintains conversation context across messages.
 
 **Example:**
 ```
 You: Hello! Tum kaun ho?
-Bot: Main DarkGPT hoon, Claude Opus AI se powered ek intelligent bot...
+Bot: Main DarkGPT hoon, Google Gemini AI se powered ek intelligent bot...
 ```
 
 ## 🛠️ Tech Stack
 
 - **Python 3.8+**
 - **python-telegram-bot** - Telegram Bot API wrapper
-- **Anthropic API** - Claude Opus 4 AI
+- **Google Gemini API** - Free & Powerful AI
 - **python-dotenv** - Environment management
+
+## 🎯 Why Gemini API?
+
+- ✅ **Completely FREE** - No credit card required
+- ✅ **Generous Daily Limits** - 60 requests per minute
+- ✅ **Powerful AI** - Comparable to GPT-4
+- ✅ **Multi-language** - Excellent Hindi/Hinglish support
+- ✅ **Easy Setup** - Get API key in 30 seconds
 
 ## 📝 License
 
