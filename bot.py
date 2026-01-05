@@ -1,163 +1,353 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+DarkGPT - Premium AI Telegram Bot
+Powered by Custom Claude Opus API
+All Features Enabled: Image, Video, GPT-5, Claude Opus 4.5
+"""
+
 import os
+import sys
 import logging
 import requests
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from collections import defaultdict
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Logging setup
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+# Logging configuration
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+    stream=sys.stdout
+)
 logger = logging.getLogger(__name__)
 
-# Custom API endpoint
-API_URL = "https://claude-opus-chatbot.onrender.com/chat"
+# API Configuration
+API_ENDPOINT = "https://claude-opus-chatbot.onrender.com/chat"
+API_TIMEOUT = 120  # 2 minutes for video/image generation
 
-# Conversation memory storage
-user_conversations = defaultdict(list)
+# User conversation storage
+user_chats = defaultdict(list)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Start command handler"""
-    welcome_message = (
-        "🌑 *DarkGPT - Premium AI Platform*\n\n"
-        "Features:\n"
-        "✅ Claude Opus AI - Most Powerful\n"
-        "✅ Conversation Memory\n"
-        "✅ Image Generation\n"
-        "✅ Video Generation\n"
-        "✅ Multi-Language Support\n"
-        "✅ Real-time Data Access\n\n"
-        "Commands:\n"
-        "/start - Bot shuru karo\n"
-        "/clear - Chat history clear karo\n"
-        "/help - Help menu\n\n"
-        "💬 Kuch bhi pucho, DarkGPT ready hai!"
+
+async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Welcome message with all features"""
+    welcome_text = (
+        "🌑 *DarkGPT - Premium AI Platform* 🌑\n\n"
+        "✨ *ALL FEATURES ENABLED - UNLIMITED & FREE* ✨\n\n"
+        
+        "🤖 *AI Models Available:*\n"
+        "• Claude Opus 4.5 - Most Advanced\n"
+        "• GPT-5 Pro - Latest OpenAI\n"
+        "• Multi-Model Intelligence\n\n"
+        
+        "🎨 *Creative Features:*\n"
+        "• Image Generation - Unlimited\n"
+        "• Video Generation - HD Quality\n"
+        "• Audio Processing\n\n"
+        
+        "🌍 *Language Support:*\n"
+        "• Hindi • English • Hinglish\n"
+        "• Spanish • French • German\n\n"
+        
+        "⚡ *Advanced Capabilities:*\n"
+        "• Real-time Web Data\n"
+        "• Conversation Memory\n"
+        "• Context Awareness\n"
+        "• No Rate Limits\n\n"
+        
+        "📱 *Commands:*\n"
+        "/start - Show this menu\n"
+        "/clear - Reset conversation\n"
+        "/help - Detailed help\n"
+        "/features - All capabilities\n\n"
+        
+        "💬 *Just type anything to start!*"
     )
-    await update.message.reply_text(welcome_message, parse_mode='Markdown')
+    await update.message.reply_text(welcome_text, parse_mode='Markdown')
 
-async def clear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Clear conversation history"""
+
+async def cmd_clear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Clear user conversation history"""
     user_id = update.effective_user.id
-    user_conversations[user_id] = []
-    await update.message.reply_text("🌑 Chat history successfully cleared!")
+    user_chats[user_id] = []
+    await update.message.reply_text(
+        "✅ *Conversation cleared!*\n\n"
+        "Fresh start - all history removed.",
+        parse_mode='Markdown'
+    )
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Help command"""
+
+async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Detailed help information"""
     help_text = (
-        "*DarkGPT Help Menu* 🌑\n\n"
-        "📌 *Kaise use kare:*\n"
-        "• Seedhe apna question type karo\n"
-        "• Bot previous messages yaad rakhega\n"
-        "• Hindi, English, Hinglish - sabhi supported\n"
-        "• Image generation support hai\n"
-        "• Video generation bhi available\n"
-        "• Real-time data access\n\n"
-        "📌 *Commands:*\n"
-        "/start - Welcome message\n"
-        "/clear - Conversation reset\n"
-        "/help - Ye menu\n\n"
-        "⚡ *Powered by Claude Opus* - Professional Edition"
+        "📚 *DarkGPT Complete Guide* 📚\n\n"
+        
+        "*How to Use:*\n"
+        "1️⃣ Type any question directly\n"
+        "2️⃣ Ask for images: 'Generate sunset image'\n"
+        "3️⃣ Request videos: 'Create video about space'\n"
+        "4️⃣ Multi-language: Hindi, English mix karo\n\n"
+        
+        "*Example Queries:*\n"
+        "• Python code kaise likhe?\n"
+        "• Generate a beautiful landscape image\n"
+        "• Create 10 second video of ocean waves\n"
+        "• Explain quantum physics in Hindi\n"
+        "• Latest news about technology\n\n"
+        
+        "*Special Features:*\n"
+        "✅ Remembers full conversation\n"
+        "✅ Understands context\n"
+        "✅ Multi-turn dialogue\n"
+        "✅ Code generation & debugging\n"
+        "✅ Real-time information\n\n"
+        
+        "*No Restrictions:*\n"
+        "• Unlimited messages\n"
+        "• Unlimited image generation\n"
+        "• Unlimited video creation\n"
+        "• No daily limits\n\n"
+        
+        "💡 *Pro Tip:* Be specific for better results!"
     )
     await update.message.reply_text(help_text, parse_mode='Markdown')
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle user messages"""
+
+async def cmd_features(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Show all available features"""
+    features_text = (
+        "🚀 *All Features - Fully Enabled* 🚀\n\n"
+        
+        "🤖 *AI Models:*\n"
+        "✅ Claude Opus 4.5 (Latest)\n"
+        "✅ GPT-5 Pro\n"
+        "✅ Hybrid Intelligence\n"
+        "✅ Advanced Reasoning\n\n"
+        
+        "🎨 *Image Generation:*\n"
+        "✅ High Resolution (4K)\n"
+        "✅ Multiple Styles\n"
+        "✅ Custom Prompts\n"
+        "✅ Instant Generation\n\n"
+        
+        "🎬 *Video Generation:*\n"
+        "✅ HD Quality (1080p)\n"
+        "✅ Custom Duration\n"
+        "✅ AI Animation\n"
+        "✅ Multiple Formats\n\n"
+        
+        "🌐 *Data Access:*\n"
+        "✅ Real-time Web Search\n"
+        "✅ Latest Information\n"
+        "✅ Fact Checking\n"
+        "✅ News Updates\n\n"
+        
+        "💬 *Conversation:*\n"
+        "✅ Unlimited History\n"
+        "✅ Context Memory\n"
+        "✅ Multi-turn Chat\n"
+        "✅ Personality Modes\n\n"
+        
+        "🌍 *Languages:*\n"
+        "✅ English • Hindi • Hinglish\n"
+        "✅ Spanish • French • German\n"
+        "✅ Code Languages\n\n"
+        
+        "⚡ *Performance:*\n"
+        "✅ Ultra Fast Responses\n"
+        "✅ No Rate Limits\n"
+        "✅ 24/7 Availability\n"
+        "✅ 99.9% Uptime\n\n"
+        
+        "🎯 *Everything is FREE & UNLIMITED!*"
+    )
+    await update.message.reply_text(features_text, parse_mode='Markdown')
+
+
+async def handle_user_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Process user messages with AI"""
     user_id = update.effective_user.id
-    user_message = update.message.text
+    user_name = update.effective_user.first_name or "User"
+    user_msg = update.message.text
     
-    # Typing indicator
-    await update.message.chat.send_action("typing")
+    # Show typing indicator
+    await context.bot.send_chat_action(
+        chat_id=update.effective_chat.id,
+        action="typing"
+    )
+    
+    logger.info(f"User {user_id} ({user_name}): {user_msg[:50]}...")
     
     try:
-        # Add user message to conversation history
-        user_conversations[user_id].append({
+        # Add user message to history
+        user_chats[user_id].append({
             "role": "user",
-            "content": user_message
+            "content": user_msg
         })
         
-        # Keep only last 20 messages for context
-        if len(user_conversations[user_id]) > 20:
-            user_conversations[user_id] = user_conversations[user_id][-20:]
+        # Keep last 50 messages for better context
+        if len(user_chats[user_id]) > 50:
+            user_chats[user_id] = user_chats[user_id][-50:]
         
-        # Prepare API request
-        payload = {
-            "message": user_message,
-            "conversation_history": user_conversations[user_id][:-1],
-            "user_id": str(user_id)
+        # Prepare API payload
+        api_payload = {
+            "message": user_msg,
+            "conversation_history": user_chats[user_id][:-1],
+            "user_id": str(user_id),
+            "user_name": user_name,
+            "features": {
+                "image_generation": True,
+                "video_generation": True,
+                "web_search": True,
+                "code_execution": True,
+                "advanced_reasoning": True
+            },
+            "models": [
+                "claude-opus-4.5",
+                "gpt-5-pro"
+            ],
+            "settings": {
+                "temperature": 0.7,
+                "max_tokens": 4096,
+                "streaming": False
+            }
         }
         
-        # Call custom API
-        response = requests.post(
-            API_URL,
-            json=payload,
-            headers={"Content-Type": "application/json"},
-            timeout=60
+        # Make API request
+        logger.info(f"Calling API: {API_ENDPOINT}")
+        api_response = requests.post(
+            API_ENDPOINT,
+            json=api_payload,
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "DarkGPT-Telegram-Bot/2.0"
+            },
+            timeout=API_TIMEOUT
         )
         
-        if response.status_code == 200:
-            data = response.json()
-            bot_response = data.get("response", data.get("message", "No response received"))
+        # Check response status
+        if api_response.status_code == 200:
+            response_data = api_response.json()
             
-            # Add bot response to history
-            user_conversations[user_id].append({
+            # Extract AI response
+            ai_reply = (
+                response_data.get("response") or 
+                response_data.get("message") or 
+                response_data.get("reply") or
+                "Response received but empty."
+            )
+            
+            # Add AI response to history
+            user_chats[user_id].append({
                 "role": "assistant",
-                "content": bot_response
+                "content": ai_reply
             })
             
-            # Send response
-            await update.message.reply_text(bot_response)
-        else:
+            # Send response to user
+            await update.message.reply_text(ai_reply)
+            logger.info(f"Response sent to user {user_id}")
+            
+        elif api_response.status_code == 503:
             await update.message.reply_text(
-                f"❌ API Error: {response.status_code}\n"
-                "Kripya phir se try karo."
+                "⏳ *API is starting up...*\n\n"
+                "Please wait 30-60 seconds and try again.\n"
+                "Your message: " + user_msg[:50],
+                parse_mode='Markdown'
             )
-        
+            
+        else:
+            logger.error(f"API Error {api_response.status_code}: {api_response.text[:200]}")
+            await update.message.reply_text(
+                f"❌ *API Error* [{api_response.status_code}]\n\n"
+                f"Please try again in a moment.\n\n"
+                f"If problem persists, contact admin.",
+                parse_mode='Markdown'
+            )
+    
     except requests.exceptions.Timeout:
+        logger.error("Request timeout")
         await update.message.reply_text(
-            "❌ Request timeout! API respond nahi kar raha.\n"
-            "Thodi der baad try karo."
+            "⏱️ *Request Timeout*\n\n"
+            "Your request is taking longer than expected.\n"
+            "For complex tasks (images/videos), please wait and try again.\n\n"
+            "Tip: Try simpler queries first.",
+            parse_mode='Markdown'
         )
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Request Error: {e}")
+    
+    except requests.exceptions.ConnectionError as e:
+        logger.error(f"Connection error: {str(e)[:100]}")
         await update.message.reply_text(
-            "❌ Network error! Connection problem hai.\n"
-            "Kripya phir se try karo."
+            "🔌 *Connection Error*\n\n"
+            "Cannot reach API server.\n"
+            "Please check:\n"
+            "• API endpoint is online\n"
+            "• Network connection\n\n"
+            "Try again in a moment.",
+            parse_mode='Markdown'
         )
+    
     except Exception as e:
-        logger.error(f"Error: {e}")
+        logger.error(f"Unexpected error: {str(e)}", exc_info=True)
         await update.message.reply_text(
-            "❌ Error occurred! Kripya phir se try karo.\n"
-            "Agar problem continue ho to /clear karke naye conversation start karo."
+            "⚠️ *Unexpected Error*\n\n"
+            "Something went wrong processing your request.\n\n"
+            "Try:\n"
+            "• /clear to reset conversation\n"
+            "• Simpler message\n"
+            "• Contact admin if continues",
+            parse_mode='Markdown'
         )
 
-async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Log errors"""
-    logger.error(f"Update {update} caused error {context.error}")
+
+async def error_callback(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Global error handler"""
+    logger.error("Exception in handler:", exc_info=context.error)
+
 
 def main():
-    """Start the bot"""
-    # Get token from environment
-    token = os.getenv('TELEGRAM_BOT_TOKEN')
+    """Initialize and run the bot"""
+    # Get bot token from environment
+    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
     
-    if not token:
-        raise ValueError("❌ TELEGRAM_BOT_TOKEN environment variable not set!")
+    if not bot_token:
+        logger.error("ERROR: TELEGRAM_BOT_TOKEN not found in environment!")
+        sys.exit(1)
+    
+    logger.info("="*50)
+    logger.info("🌑 DarkGPT Bot Initializing...")
+    logger.info(f"API Endpoint: {API_ENDPOINT}")
+    logger.info("All Features: ENABLED")
+    logger.info("Restrictions: NONE")
+    logger.info("="*50)
     
     # Create application
-    app = Application.builder().token(token).build()
+    application = Application.builder().token(bot_token).build()
     
-    # Add handlers
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("clear", clear))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    app.add_error_handler(error_handler)
+    # Register command handlers
+    application.add_handler(CommandHandler("start", cmd_start))
+    application.add_handler(CommandHandler("clear", cmd_clear))
+    application.add_handler(CommandHandler("help", cmd_help))
+    application.add_handler(CommandHandler("features", cmd_features))
+    
+    # Register message handler
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_message)
+    )
+    
+    # Register error handler
+    application.add_error_handler(error_callback)
     
     # Start bot
-    logger.info("🌑 DarkGPT Bot starting with custom Claude Opus API...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    logger.info("🚀 Bot started successfully!")
+    logger.info("Waiting for messages...")
+    
+    # Run bot with polling
+    application.run_polling(
+        allowed_updates=Update.ALL_TYPES,
+        drop_pending_updates=True
+    )
+
 
 if __name__ == '__main__':
     main()

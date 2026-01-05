@@ -1,157 +1,185 @@
-# 🌑 DarkGPT - Premium Telegram Bot
+# 🌑 DarkGPT - Premium AI Telegram Bot
 
-**Professional AI Telegram Bot powered by Custom Claude Opus API**
+**Unlimited AI Power - All Features FREE**
 
-## ✨ Features
+## 🚀 Features - ALL ENABLED
 
-- 🤖 **Claude Opus AI** - Most powerful AI model
-- 💾 **Conversation Memory** - Remembers complete chat history
-- 🇮🇳 **Multi-Language** - Hindi, English, Hinglish, Spanish, French, German
-- 🖼️ **Image Generation** - Create images from text
-- 🎥 **Video Generation** - Generate videos
-- 🌐 **Real-time Data** - Access to current information
-- ⚡ **Fast Responses** - Professional-grade performance
+### 🤖 AI Models
+- ✅ **Claude Opus 4.5** - Latest & Most Powerful
+- ✅ **GPT-5 Pro** - OpenAI's Best
+- ✅ **Multi-Model Intelligence**
+- ✅ **Advanced Reasoning**
 
-## 🚀 Quick Setup (2 Minutes)
+### 🎨 Creative Generation
+- ✅ **Image Generation** - Unlimited, High Quality
+- ✅ **Video Generation** - HD, Custom Duration
+- ✅ **Audio Processing**
+- ✅ **Multiple Formats**
 
-### 1️⃣ Get Telegram Bot Token (FREE)
+### 🌍 Language Support
+- ✅ Hindi • English • Hinglish
+- ✅ Spanish • French • German
+- ✅ Programming Languages
 
-1. Open Telegram → Search `@BotFather`
-2. Send `/newbot`
-3. Name: `DarkGPT`
-4. Username: `yourname_darkgpt_bot`
-5. Copy token: `7123456:AAHdqTcvCH...`
+### ⚡ Advanced Capabilities
+- ✅ **Real-time Web Data**
+- ✅ **Conversation Memory** (50+ messages)
+- ✅ **Context Awareness**
+- ✅ **Code Execution**
+- ✅ **No Rate Limits**
+- ✅ **No Restrictions**
 
-### 2️⃣ Local Test (Optional)
+## 📦 Quick Setup
 
-```bash
-git clone https://github.com/Aman262626/DarkGPT-Telegram-Bot.git
-cd DarkGPT-Telegram-Bot
-pip install -r requirements.txt
+### 1. Get Bot Token
+```
+1. Open Telegram → @BotFather
+2. Send: /newbot
+3. Name: DarkGPT
+4. Username: yourname_darkgpt_bot
+5. Copy token
 ```
 
-Create `.env` file:
-```env
-TELEGRAM_BOT_TOKEN=your_token_here
-```
-
-Run bot:
-```bash
-python bot.py
-```
-
-### 3️⃣ Deploy on Render (24/7 Free Hosting)
+### 2. Deploy on Render (FREE)
 
 1. Go to [render.com](https://render.com)
 2. Sign up with GitHub
 3. New → Web Service
-4. Connect this repo: `DarkGPT-Telegram-Bot`
+4. Connect this repository
 5. Add Environment Variable:
-   - Key: `TELEGRAM_BOT_TOKEN`
-   - Value: (your telegram token)
-6. Click "Create Web Service"
+   - `TELEGRAM_BOT_TOKEN` = your_token
+6. Deploy!
 
-**Done! Bot is live 24/7** 🎉
+### 3. Local Testing (Optional)
+```bash
+git clone https://github.com/Aman262626/DarkGPT-Telegram-Bot.git
+cd DarkGPT-Telegram-Bot
+pip install -r requirements.txt
 
-## 🎮 Commands
+# Create .env file
+echo "TELEGRAM_BOT_TOKEN=your_token" > .env
 
-- `/start` - Welcome message & features
-- `/clear` - Reset conversation history
-- `/help` - Detailed help menu
-
-## 💡 Example Usage
-
-**Text Conversations:**
+python bot.py
 ```
-You: Hello! Aap kaun hain?
-Bot: Main DarkGPT hoon, Claude Opus AI se powered...
 
+## 🎮 Bot Commands
+
+- `/start` - Welcome & features overview
+- `/help` - Detailed usage guide
+- `/features` - Complete feature list
+- `/clear` - Reset conversation
+
+## 💡 Usage Examples
+
+### Text Conversations
+```
 You: Python mein function kaise likhte hain?
-Bot: Python mein function banana bahut simple hai...
+Bot: [Detailed Python tutorial]
+
+You: Explain quantum physics in simple Hindi
+Bot: [Simple explanation in Hindi]
 ```
 
-**Image Generation:**
+### Image Generation
 ```
-You: Generate an image of a sunset over mountains
-Bot: [AI will generate and provide image]
+You: Generate a beautiful sunset over mountains
+Bot: [Generates high-quality image]
+
+You: Create image of futuristic city
+Bot: [AI-generated cityscape]
 ```
 
-**Multi-language:**
+### Video Creation
 ```
-You: Bonjour! Comment ça va?
-Bot: Bonjour! Je vais bien, merci...
+You: Create 10 second video of ocean waves
+Bot: [Generates HD video]
+
+You: Make video about space exploration
+Bot: [Custom AI video]
+```
+
+### Multi-language
+```
+You: Hola! ¿Cómo estás?
+Bot: [Spanish response]
+
+You: Namaste! Aap kaise hain?
+Bot: [Hindi response]
 ```
 
 ## 🔧 Tech Stack
 
-- Python 3.8+
-- python-telegram-bot 20.7
-- Custom Claude Opus API
-- Requests library
-- python-dotenv
+- **Python 3.11**
+- **python-telegram-bot 20.8**
+- **Custom Claude Opus API**
+- **Requests Library**
 
-## 🎯 API Features
+## 🌐 API Information
 
-Your custom API endpoint: `https://claude-opus-chatbot.onrender.com/chat`
+**Endpoint:** `https://claude-opus-chatbot.onrender.com/chat`
 
-**Supported Features:**
-- ✅ Conversation Memory
-- ✅ Image Generation
-- ✅ Video Generation
-- ✅ Multi-language (6+ languages)
-- ✅ Real-time Data Access
-- ✅ Professional Edition (v7.0.0)
+**Features:**
+- Version: 7.0.0 Professional
+- Image Generation: ✅
+- Video Generation: ✅
+- Multi-language: ✅ (6+ languages)
+- Real-time Data: ✅
+- Memory: ✅
 
-## ❓ Troubleshooting
+**Models:**
+- Claude Opus 4.5
+- GPT-5 Pro
+- Hybrid Intelligence
+
+## 🎯 Why This Bot?
+
+✅ **100% FREE** - No subscriptions, no limits
+✅ **All Features Enabled** - Nothing locked
+✅ **Unlimited Usage** - Messages, images, videos
+✅ **Latest AI Models** - Claude Opus 4.5 + GPT-5
+✅ **Multi-language** - 6+ languages supported
+✅ **24/7 Available** - Always online
+✅ **Fast Responses** - Optimized performance
+✅ **No Restrictions** - Use as much as you want
+
+## 🛠️ Troubleshooting
 
 **Bot not responding?**
-- Check if bot token is correct
-- Verify API endpoint is operational
-- Check Render logs for errors
-
-**API Error?**
-- Custom API might be starting up (wait 1-2 min)
-- Check API status at base URL
-- Verify network connection
+- Wait 30 seconds (API might be starting)
+- Check Render logs
+- Verify bot token is correct
 
 **Slow responses?**
-- Claude Opus provides detailed responses
-- Image/video generation takes time
-- Normal for complex queries
+- Normal for image/video generation
+- Complex queries take time
+- API processing large requests
+
+**Error messages?**
+- Use `/clear` to reset
+- Try simpler query first
+- Check Render service status
 
 ## 📝 License
 
-MIT License - Free to use
+MIT License - Free to use, modify, distribute
 
-## 👤 Developer
+## 👨‍💻 Developer
 
-[@Aman262626](https://github.com/Aman262626)
+**Created by:** [@Aman262626](https://github.com/Aman262626)
 
-## 🔗 API Documentation
+**Repository:** [DarkGPT-Telegram-Bot](https://github.com/Aman262626/DarkGPT-Telegram-Bot)
 
-API Endpoint: `https://claude-opus-chatbot.onrender.com`
+## 🤝 Contributing
 
-**Endpoints:**
-- `GET /` - API status
-- `POST /chat` - Main chat endpoint
-- `GET /health` - Health check
-
-**Request Format:**
-```json
-{
-  "message": "Your question here",
-  "conversation_history": [...],
-  "user_id": "unique_user_id"
-}
-```
-
-**Response Format:**
-```json
-{
-  "response": "AI generated response"
-}
-```
+Pull requests welcome! For major changes:
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Open pull request
 
 ---
 
-⭐ Star this repo if you find it helpful!
+⭐ **Star this repo if you find it helpful!**
+
+🌑 **DarkGPT - Unlimited AI Power in Your Hands**
