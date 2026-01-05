@@ -2,9 +2,9 @@ import os
 import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from anthropic import Anthropic
 from collections import defaultdict
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 # Load environment variables
 load_dotenv()
@@ -13,8 +13,11 @@ load_dotenv()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Anthropic client
-anthropic_client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
+# Configure Gemini API
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+# Initialize Gemini model
+model = genai.GenerativeModel('gemini-pro')
 
 # Conversation memory storage
 user_conversations = defaultdict(list)
@@ -22,11 +25,12 @@ user_conversations = defaultdict(list)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Start command handler"""
     welcome_message = (
-        "🌑 *DarkGPT - Powered by Claude Opus*\n\n"
+        "🌑 *DarkGPT - Powered by Google Gemini AI*\n\n"
         "Features:\n"
         "✅ Advanced AI Conversations\n"
         "✅ Memory-Based Chat\n"
         "✅ Multi-Language Support\n"
+        "✅ 100% FREE API\n"
         "✅ Real-time Intelligence\n\n"
         "Commands:\n"
         "/start - Bot shuru karo\n"
@@ -55,7 +59,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/start - Welcome message\n"
         "/clear - Conversation reset\n"
         "/help - Ye menu\n\n"
-        "⚡ *Powered by Claude Opus 4* - Latest AI Model"
+        "⚡ *Powered by Google Gemini* - FREE & Powerful AI"
     )
     await update.message.reply_text(help_text, parse_mode='Markdown')
 
@@ -71,28 +75,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Add user message to conversation history
         user_conversations[user_id].append({
             "role": "user",
-            "content": user_message
+            "parts": [user_message]
         })
         
-        # Keep only last 20 messages for context (10 back-and-forth)
+        # Keep only last 20 messages for context
         if len(user_conversations[user_id]) > 20:
             user_conversations[user_id] = user_conversations[user_id][-20:]
         
-        # Call Claude Opus API
-        response = anthropic_client.messages.create(
-            model="claude-opus-4-20250514",  # Latest Opus model
-            max_tokens=2048,
-            temperature=1,
-            messages=user_conversations[user_id]
-        )
+        # Create chat with history
+        chat = model.start_chat(history=user_conversations[user_id][:-1])
         
-        # Extract response
-        bot_response = response.content[0].text
+        # Get response
+        response = chat.send_message(user_message)
+        bot_response = response.text
         
         # Add bot response to history
         user_conversations[user_id].append({
-            "role": "assistant",
-            "content": bot_response
+            "role": "model",
+            "parts": [bot_response]
         })
         
         # Send response
