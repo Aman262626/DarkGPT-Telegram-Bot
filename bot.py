@@ -1,10 +1,10 @@
 import os
 import logging
-import requests
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from collections import defaultdict
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 # Load environment variables
 load_dotenv()
@@ -13,8 +13,11 @@ load_dotenv()
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Custom API endpoint
-API_URL = "https://claude-opus-chatbot.onrender.com/chat"
+# Configure Gemini API
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+
+# Initialize Gemini model
+model = genai.GenerativeModel('gemini-pro')
 
 # Conversation memory storage
 user_conversations = defaultdict(list)
@@ -22,12 +25,12 @@ user_conversations = defaultdict(list)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Start command handler"""
     welcome_message = (
-        "🌑 *DarkGPT - Powered by Custom Claude Opus API*\n\n"
+        "🌑 *DarkGPT - Powered by Google Gemini AI*\n\n"
         "Features:\n"
         "✅ Advanced AI Conversations\n"
         "✅ Memory-Based Chat\n"
         "✅ Multi-Language Support\n"
-        "✅ Image Generation Support\n"
+        "✅ 100% FREE API\n"
         "✅ Real-time Intelligence\n\n"
         "Commands:\n"
         "/start - Bot shuru karo\n"
@@ -51,13 +54,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• Seedhe apna question type karo\n"
         "• Bot previous messages yaad rakhega\n"
         "• Hindi, English, Hinglish - sabhi supported\n"
-        "• Long conversations ke liye optimized\n"
-        "• Image generation bhi supported\n\n"
+        "• Long conversations ke liye optimized\n\n"
         "📌 *Commands:*\n"
         "/start - Welcome message\n"
         "/clear - Conversation reset\n"
         "/help - Ye menu\n\n"
-        "⚡ *Powered by Custom Claude Opus API*"
+        "⚡ *Powered by Google Gemini* - FREE & Powerful AI"
     )
     await update.message.reply_text(help_text, parse_mode='Markdown')
 
@@ -73,57 +75,29 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Add user message to conversation history
         user_conversations[user_id].append({
             "role": "user",
-            "content": user_message
+            "parts": [user_message]
         })
         
         # Keep only last 20 messages for context
         if len(user_conversations[user_id]) > 20:
             user_conversations[user_id] = user_conversations[user_id][-20:]
         
-        # Prepare API request
-        payload = {
-            "message": user_message,
-            "conversation_history": user_conversations[user_id][:-1],
-            "user_id": str(user_id)
-        }
+        # Create chat with history
+        chat = model.start_chat(history=user_conversations[user_id][:-1])
         
-        # Call custom API
-        response = requests.post(
-            API_URL,
-            json=payload,
-            headers={"Content-Type": "application/json"},
-            timeout=30
-        )
+        # Get response
+        response = chat.send_message(user_message)
+        bot_response = response.text
         
-        if response.status_code == 200:
-            data = response.json()
-            bot_response = data.get("response", data.get("message", "No response received"))
-            
-            # Add bot response to history
-            user_conversations[user_id].append({
-                "role": "assistant",
-                "content": bot_response
-            })
-            
-            # Send response
-            await update.message.reply_text(bot_response)
-        else:
-            await update.message.reply_text(
-                f"❌ API Error: {response.status_code}\n"
-                "Kripya phir se try karo."
-            )
+        # Add bot response to history
+        user_conversations[user_id].append({
+            "role": "model",
+            "parts": [bot_response]
+        })
         
-    except requests.exceptions.Timeout:
-        await update.message.reply_text(
-            "❌ Request timeout! API respond nahi kar raha.\n"
-            "Thodi der baad try karo."
-        )
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Request Error: {e}")
-        await update.message.reply_text(
-            "❌ Network error! Connection problem hai.\n"
-            "Kripya phir se try karo."
-        )
+        # Send response
+        await update.message.reply_text(bot_response)
+        
     except Exception as e:
         logger.error(f"Error: {e}")
         await update.message.reply_text(
@@ -154,7 +128,7 @@ def main():
     app.add_error_handler(error_handler)
     
     # Start bot
-    logger.info("🌑 DarkGPT Bot starting with custom API...")
+    logger.info("🌑 DarkGPT Bot starting...")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == '__main__':
