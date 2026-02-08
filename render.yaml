@@ -7,3 +7,10 @@ services:
     envVars:
       - key: TELEGRAM_BOT_TOKEN
         sync: false
+
+  - type: static
+    name: darkgpt-web
+    staticPublishPath: web
+    envVars:
+      - key: SKIP_INSTALL_DEPS
+        value: true
